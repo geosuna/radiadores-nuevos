@@ -45,7 +45,7 @@ return [
     |
     */
 
-    'username' => 'email',
+    'username' => 'usuario',
 
     'email' => 'email',
 
@@ -144,7 +144,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Deshabilitado - el registro se hará desde configuración
         Features::resetPasswords(),
         Features::emailVerification(),
         Features::twoFactorAuthentication([

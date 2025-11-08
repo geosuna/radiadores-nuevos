@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('nombre');
             $table->string('direccion')->nullable();
+            $table->string('ciudad')->nullable();
+            $table->string('estado')->nullable();
+            $table->string('codigo_postal')->nullable();
+            $table->string('telefono')->nullable();
             $table->boolean('estatus')->default(1);
             $table->timestamps();
         });

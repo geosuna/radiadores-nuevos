@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Sucursal;
+use Illuminate\Support\Facades\DB;
 
 class SucursalSeeder extends Seeder
 {
@@ -13,34 +12,35 @@ class SucursalSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command->info('Creando sucursales...');
-        $sucursales = [
+        echo "Creando sucursales...\n";
+
+        DB::table('sucursal')->insert([
             [
                 'id' => 1,
-                'nombre' => 'Pinos',
-                'direccion' => 'boulevard madero 16',
+                'nombre' => 'Sucursal 1',
+                'direccion' => 'Blvd. Sucursales 802, P-69',
+                'ciudad' => 'Tijuana',
+                'estado' => 'Baja California',
+                'codigo_postal' => '22000',
+                'telefono' => '(664) 123-4567',
                 'estatus' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'id' => 2,
-                'nombre' => 'Centro',
-                'direccion' => 'boulevard central',
+                'nombre' => 'Sucursal 2',
+                'direccion' => 'Blvd. Lázaro Cárdenas 3039, Mirasol',
+                'ciudad' => 'Mexicali',
+                'estado' => 'Baja California',
+                'codigo_postal' => '21396',
+                'telefono' => '(686) 987-6543',
                 'estatus' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-            [
-                'id' => 3,
-                'nombre' => 'Mexicali',
-                'direccion' => 'boulevard aguacaliente',
-                'estatus' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ];
+        ]);
 
-        Sucursal::insert($sucursales);
+        echo "✓ Sucursales creadas correctamente.\n";
     }
 }

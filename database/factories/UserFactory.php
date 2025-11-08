@@ -23,7 +23,7 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'sucursal_id' => 1,
+            'sucursal_id' => \App\Models\Sucursal::factory(),
             'usuario' => fake()->unique()->userName(),
             'nombre' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -57,6 +57,47 @@ class UserFactory extends Factory
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'two_factor_confirmed_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an administrator.
+     */
+    public function administrador(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'rol' => 'administrador',
+            'acceso_todas_sucursales' => 1,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a supervisor.
+     */
+    public function supervisor(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'rol' => 'supervisor',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a capturista.
+     */
+    public function capturista(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'rol' => 'capturista',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is inactive.
+     */
+    public function inactivo(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'estatus' => 0,
         ]);
     }
 }

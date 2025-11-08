@@ -7,27 +7,57 @@ import { edit as editAppearance } from '@/routes/appearance';
 import { edit as editProfile } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
+import settings from '@/routes/settings';
 import { type NavItem } from '@/types';
-import { Link } from '@inertiajs/vue3';
+import { Link, usePage } from '@inertiajs/vue3';
+
+const page = usePage();
+const user = page.props.auth.user;
+
+// Verificar si el usuario puede registrar nuevos usuarios
+const canRegisterUsers = user.rol === 'administrador' || user.rol === 'supervisor';
+
+// Verificar si el usuario debe ver la opción de cambiar contraseña (vendedor y capturista)
+const showPasswordOption = user.rol === 'vendedor' || user.rol === 'capturista';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        title: 'Perfil',
         href: editProfile(),
     },
-    {
-        title: 'Password',
+];
+
+// Agregar opción de contraseña solo para vendedor y capturista
+if (showPasswordOption) {
+    sidebarNavItems.push({
+        title: 'Contraseña',
         href: editPassword(),
-    },
+    });
+}
+
+// Agregar autenticación de dos factores y apariencia para todos
+sidebarNavItems.push(
     {
-        title: 'Two-Factor Auth',
+        title: 'Autenticación de dos factores',
         href: show(),
     },
     {
-        title: 'Appearance',
+        title: 'Apariencia',
         href: editAppearance(),
-    },
-];
+    }
+);
+
+// Agregar opciones de gestión de usuarios para administradores y supervisores
+if (canRegisterUsers) {
+    sidebarNavItems.push({
+        title: 'Registrar usuario',
+        href: settings.users.create(),
+    });
+    sidebarNavItems.push({
+        title: 'Lista de usuarios',
+        href: settings.users.index(),
+    });
+}
 
 const currentPath = typeof window !== undefined ? window.location.pathname : '';
 </script>
@@ -35,8 +65,8 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 <template>
     <div class="px-4 py-6">
         <Heading
-            title="Settings"
-            description="Manage your profile and account settings"
+            title="Configuración"
+            description="Administra tu perfil y configuración de cuenta"
         />
 
         <div class="flex flex-col lg:flex-row lg:space-x-12">
@@ -62,8 +92,8 @@ const currentPath = typeof window !== undefined ? window.location.pathname : '';
 
             <Separator class="my-6 lg:hidden" />
 
-            <div class="flex-1 md:max-w-2xl">
-                <section class="max-w-xl space-y-12">
+            <div class="flex-1 w-full">
+                <section class="w-full space-y-12">
                     <slot />
                 </section>
             </div>

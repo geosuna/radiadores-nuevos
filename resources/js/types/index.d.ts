@@ -28,9 +28,14 @@ export type AppPageProps<
 
 export interface User {
     id: number;
-    name: string;
+    sucursal_id: number;
+    usuario: string;
+    nombre: string;
     email: string;
     avatar?: string;
+    rol: 'administrador' | 'supervisor' | 'capturista' | 'vendedor';
+    acceso_todas_sucursales: boolean;
+    estatus: boolean;
     email_verified_at: string | null;
     created_at: string;
     updated_at: string;
