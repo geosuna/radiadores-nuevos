@@ -26,3 +26,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Database schema files
+/database/schema_workbench_laravel.sql
