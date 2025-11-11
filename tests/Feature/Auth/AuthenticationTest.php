@@ -21,11 +21,18 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen()
     {
-        $user = User::factory()->withoutTwoFactor()->create();
+        $sucursal = \App\Models\Sucursal::factory()->create();
+
+        User::factory()->withoutTwoFactor()->create([
+            'usuario' => 'testuser',
+            'password' => bcrypt('password'),
+            'sucursal_id' => $sucursal->id,
+        ]);
 
         $response = $this->post(route('login.store'), [
-            'email' => $user->email,
+            'usuario' => 'testuser',
             'password' => 'password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->assertAuthenticated();
@@ -43,7 +50,13 @@ class AuthenticationTest extends TestCase
             'confirmPassword' => true,
         ]);
 
-        $user = User::factory()->create();
+        $sucursal = \App\Models\Sucursal::factory()->create();
+
+        $user = User::factory()->create([
+            'usuario' => 'testuser2fa',
+            'password' => bcrypt('password'),
+            'sucursal_id' => $sucursal->id,
+        ]);
 
         $user->forceFill([
             'two_factor_secret' => encrypt('test-secret'),
@@ -52,8 +65,9 @@ class AuthenticationTest extends TestCase
         ])->save();
 
         $response = $this->post(route('login'), [
-            'email' => $user->email,
+            'usuario' => 'testuser2fa',
             'password' => 'password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $response->assertRedirect(route('two-factor.login'));
@@ -63,11 +77,18 @@ class AuthenticationTest extends TestCase
 
     public function test_users_can_not_authenticate_with_invalid_password()
     {
-        $user = User::factory()->create();
+        $sucursal = \App\Models\Sucursal::factory()->create();
+
+        User::factory()->create([
+            'usuario' => 'testuser',
+            'password' => bcrypt('password'),
+            'sucursal_id' => $sucursal->id,
+        ]);
 
         $this->post(route('login.store'), [
-            'email' => $user->email,
+            'usuario' => 'testuser',
             'password' => 'wrong-password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->assertGuest();
@@ -85,13 +106,20 @@ class AuthenticationTest extends TestCase
 
     public function test_users_are_rate_limited()
     {
-        $user = User::factory()->create();
+        $sucursal = \App\Models\Sucursal::factory()->create();
 
-        RateLimiter::increment(md5('login'.implode('|', [$user->email, '127.0.0.1'])), amount: 5);
+        $user = User::factory()->create([
+            'usuario' => 'testuser',
+            'password' => bcrypt('password'),
+            'sucursal_id' => $sucursal->id,
+        ]);
+
+        RateLimiter::increment(md5('login'.implode('|', [$user->usuario, '127.0.0.1'])), amount: 5);
 
         $response = $this->post(route('login.store'), [
-            'email' => $user->email,
+            'usuario' => 'testuser',
             'password' => 'wrong-password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $response->assertTooManyRequests();

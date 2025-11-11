@@ -124,7 +124,7 @@ const deleteForm = useForm({
 });
 
 // Función de búsqueda
-const search = () => {
+const performSearch = () => {
     router.get(
         settings.users.index({ query: { search: searchQuery.value } }).url,
         {},
@@ -308,9 +308,9 @@ const getAllSucursales = (user: User) => {
                         type="text"
                         placeholder="Buscar por usuario, nombre, email o rol..."
                         class="flex-1"
-                        @keyup.enter="search"
+                        @keyup.enter="performSearch"
                     />
-                    <Button @click="search">Buscar</Button>
+                    <Button @click="performSearch">Buscar</Button>
                 </div>
 
                 <!-- Mensaje de éxito -->
@@ -453,8 +453,9 @@ const getAllSucursales = (user: User) => {
                         :disabled="!link.url"
                         size="sm"
                         @click="link.url && router.get(link.url)"
-                        v-html="link.label"
-                    />
+                    >
+                        <span v-html="link.label"></span>
+                    </Button>
                 </div>
             </div>
         </SettingsLayout>

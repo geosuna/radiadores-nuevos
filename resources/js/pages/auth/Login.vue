@@ -2,7 +2,6 @@
 import InputError from '@/components/InputError.vue';
 import TextLink from '@/components/TextLink.vue';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
@@ -11,15 +10,21 @@ import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 import { useForm, Head } from '@inertiajs/vue3';
 
-defineProps<{
+interface Sucursal {
+    id: number;
+    nombre: string;
+}
+
+const props = defineProps<{
     status?: string;
     canResetPassword: boolean;
+    sucursales: Sucursal[];
 }>();
 
 const form = useForm({
     usuario: '',
     password: '',
-    remember: false,
+    sucursal_id: props.sucursales.length > 0 ? props.sucursales[0].id : null,
 });
 
 const submit = () => {
@@ -47,6 +52,26 @@ const submit = () => {
 
         <form @submit.prevent="submit" class="flex flex-col gap-6">
             <div class="grid gap-6">
+                <div class="grid gap-2">
+                    <Label for="sucursal">Sucursal</Label>
+                    <select
+                        id="sucursal"
+                        v-model="form.sucursal_id"
+                        name="sucursal_id"
+                        required
+                        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                    >
+                        <option
+                            v-for="sucursal in sucursales"
+                            :key="sucursal.id"
+                            :value="sucursal.id"
+                        >
+                            {{ sucursal.nombre }}
+                        </option>
+                    </select>
+                    <InputError :message="form.errors.sucursal_id" />
+                </div>
+
                 <div class="grid gap-2">
                     <Label for="usuario">Usuario</Label>
                     <Input
@@ -88,22 +113,10 @@ const submit = () => {
                     <InputError :message="form.errors.password" />
                 </div>
 
-                <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox 
-                            id="remember" 
-                            v-model:checked="form.remember"
-                            name="remember" 
-                            :tabindex="3" 
-                        />
-                        <span>Recordarme</span>
-                    </Label>
-                </div>
-
                 <Button
                     type="submit"
                     class="mt-4 w-full"
-                    :tabindex="4"
+                    :tabindex="3"
                     :disabled="form.processing"
                     data-test="login-button"
                 >

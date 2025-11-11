@@ -34,7 +34,13 @@ class TwoFactorChallengeTest extends TestCase
             'confirmPassword' => true,
         ]);
 
-        $user = User::factory()->create();
+        $sucursal = \App\Models\Sucursal::factory()->create();
+
+        $user = User::factory()->create([
+            'usuario' => 'testuser2fa',
+            'password' => bcrypt('password'),
+            'sucursal_id' => $sucursal->id,
+        ]);
 
         $user->forceFill([
             'two_factor_secret' => encrypt('test-secret'),
@@ -43,8 +49,9 @@ class TwoFactorChallengeTest extends TestCase
         ])->save();
 
         $this->post(route('login'), [
-            'email' => $user->email,
+            'usuario' => 'testuser2fa',
             'password' => 'password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->get(route('two-factor.login'))

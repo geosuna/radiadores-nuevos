@@ -23,7 +23,7 @@ return new class extends Migration
 
             $table->unique(['sucursal_id', 'articulo_id'], 'inventario_sucursal_articulo_unique');
 
-            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('usuario_modificacion_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
         });

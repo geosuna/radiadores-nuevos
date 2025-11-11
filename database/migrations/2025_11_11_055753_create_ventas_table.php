@@ -25,7 +25,7 @@ return new class extends Migration
             $table->text('observaciones')->nullable()->comment('Notas adicionales de la venta');
             $table->timestamps();
 
-            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
         });
     }

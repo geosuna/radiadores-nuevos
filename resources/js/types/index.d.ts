@@ -5,6 +5,12 @@ export interface Auth {
     user: User;
 }
 
+export interface Sucursal {
+    id: number;
+    nombre: string;
+    modelo?: any;
+}
+
 export interface BreadcrumbItem {
     title: string;
     href: string;
@@ -23,6 +29,7 @@ export type AppPageProps<
     name: string;
     quote: { message: string; author: string };
     auth: Auth;
+    sucursal_actual?: Sucursal;
     sidebarOpen: boolean;
 };
 

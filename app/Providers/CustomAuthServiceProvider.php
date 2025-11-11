@@ -26,10 +26,11 @@ class CustomAuthServiceProvider extends ServiceProvider
     {
         // Configurar Fortify para autenticar con 'usuario' en lugar de 'email'
         Fortify::authenticateUsing(function (Request $request) {
-            // Validar que el campo usuario esté presente
+            // Validar que el campo usuario y sucursal estén presentes
             $request->validate([
                 'usuario' => 'required|string',
                 'password' => 'required|string',
+                'sucursal_id' => 'required|exists:sucursal,id',
             ]);
 
             // Buscar usuario por campo 'usuario' (sin filtrar por estatus)
@@ -55,6 +56,23 @@ class CustomAuthServiceProvider extends ServiceProvider
                     'password' => ['La contraseña es incorrecta.'],
                 ]);
             }
+
+            // Verificar que el usuario tenga acceso a la sucursal seleccionada
+            $tieneAcceso = $user->acceso_todas_sucursales ||
+                           $user->sucursal_id == $request->sucursal_id ||
+                           $user->sucursalesAccesibles()->where('sucursal_id', $request->sucursal_id)->exists();
+
+            if (!$tieneAcceso) {
+                throw ValidationException::withMessages([
+                    'sucursal_id' => ['No tienes acceso a esta sucursal.'],
+                ]);
+            }
+
+            // Guardar la sucursal seleccionada en la sesión
+            session([
+                'sucursal_actual' => (int) $request->sucursal_id,
+                'last_activity_time' => time(),
+            ]);
 
             // Si todo está bien, retornar el usuario
             return $user;

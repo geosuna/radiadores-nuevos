@@ -20,11 +20,11 @@ return new class extends Migration
             $table->integer('cantidad_anterior')->comment('Cantidad antes del movimiento');
             $table->integer('cantidad_nueva')->comment('Cantidad después del movimiento');
             $table->unsignedBigInteger('usuario_movimiento_id')->comment('Usuario que realizó el movimiento');
-            $table->string('referencia', 100)->nullable()->comment('Referencia externa (factura, orden, etc.)');
+            $table->string('referencia', 100)->nullable()->comment('Referencia de movimiento (externa: factura, orden / Interna: venta_id, devolucion_id/ Autogenerada : Entradas, Salidas, Ajustes)');
             $table->text('observaciones')->nullable()->comment('Notas adicionales del movimiento');
             $table->timestamps();
 
-            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('sucursal_id')->references('id')->on('sucursal')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('restrict')->onUpdate('cascade');
             $table->foreign('usuario_movimiento_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
         });

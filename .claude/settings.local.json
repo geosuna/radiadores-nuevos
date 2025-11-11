@@ -1,8 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(php artisan migrate:fresh:*)",
-      "Bash(php artisan:*)"
+      "Bash(php artisan migrate:fresh:*)"
     ],
     "deny": [],
     "ask": []

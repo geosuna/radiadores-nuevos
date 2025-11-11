@@ -36,15 +36,19 @@ class LoginTest extends TestCase
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create([
+        $sucursal = Sucursal::first();
+
+        User::factory()->create([
             'usuario' => 'testuser',
             'password' => bcrypt('password123'),
             'estatus' => 1,
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $response = $this->post('/login', [
             'usuario' => 'testuser',
             'password' => 'password123',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->assertAuthenticated();
@@ -53,15 +57,19 @@ class LoginTest extends TestCase
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
-        $user = User::factory()->create([
+        $sucursal = Sucursal::first();
+        
+        User::factory()->create([
             'usuario' => 'testuser',
             'password' => bcrypt('password123'),
             'estatus' => 1,
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->post('/login', [
             'usuario' => 'testuser',
             'password' => 'wrong-password',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->assertGuest();
@@ -69,15 +77,19 @@ class LoginTest extends TestCase
 
     public function test_inactive_users_cannot_authenticate(): void
     {
-        $user = User::factory()->create([
+        $sucursal = Sucursal::first();
+        
+        User::factory()->create([
             'usuario' => 'testuser',
             'password' => bcrypt('password123'),
             'estatus' => 0, // Usuario inactivo
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->post('/login', [
             'usuario' => 'testuser',
             'password' => 'password123',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $this->assertGuest();
@@ -85,8 +97,11 @@ class LoginTest extends TestCase
 
     public function test_login_requires_usuario_field(): void
     {
+        $sucursal = Sucursal::first();
+        
         $response = $this->post('/login', [
             'password' => 'password123',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $response->assertSessionHasErrors(['usuario']);
@@ -94,10 +109,23 @@ class LoginTest extends TestCase
 
     public function test_login_requires_password_field(): void
     {
+        $sucursal = Sucursal::first();
+        
         $response = $this->post('/login', [
             'usuario' => 'testuser',
+            'sucursal_id' => $sucursal->id,
         ]);
 
         $response->assertSessionHasErrors(['password']);
+    }
+
+    public function test_login_requires_sucursal_id_field(): void
+    {
+        $response = $this->post('/login', [
+            'usuario' => 'testuser',
+            'password' => 'password123',
+        ]);
+
+        $response->assertSessionHasErrors(['sucursal_id']);
     }
 }
