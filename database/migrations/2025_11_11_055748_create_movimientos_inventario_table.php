@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('movimientos_inventario', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('sucursal_id');
-            $table->unsignedBigInteger('articulo_id');
-            $table->enum('tipo_movimiento', ['entrada', 'salida', 'ajuste', 'venta', 'devolucion']);
-            $table->integer('cantidad');
-            $table->integer('cantidad_anterior');
-            $table->integer('cantidad_nueva');
-            $table->unsignedBigInteger('user_id');
-            $table->string('referencia', 100)->nullable();
-            $table->text('observaciones')->nullable();
+            $table->unsignedBigInteger('sucursal_id')->comment('Sucursal del movimiento');
+            $table->unsignedBigInteger('articulo_id')->comment('Artículo movido');
+            $table->enum('tipo_movimiento', ['entrada', 'salida', 'ajuste', 'venta', 'devolucion'])->comment('Tipo de movimiento');
+            $table->integer('cantidad')->comment('Cantidad del movimiento');
+            $table->integer('cantidad_anterior')->comment('Cantidad antes del movimiento');
+            $table->integer('cantidad_nueva')->comment('Cantidad después del movimiento');
+            $table->unsignedBigInteger('usuario_movimiento_id')->comment('Usuario que realizó el movimiento');
+            $table->string('referencia', 100)->nullable()->comment('Referencia externa (factura, orden, etc.)');
+            $table->text('observaciones')->nullable()->comment('Notas adicionales del movimiento');
             $table->timestamps();
 
-            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onUpdate('cascade');
-            $table->foreign('articulo_id')->references('id')->on('articulos')->onUpdate('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('sucursal_id')->references('id')->on('sucursales')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('restrict')->onUpdate('cascade');
+            $table->foreign('usuario_movimiento_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
         });
     }
 

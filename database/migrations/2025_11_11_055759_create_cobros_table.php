@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('cobros', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('venta_id');
-            $table->dateTime('fecha_cobro')->useCurrent();
-            $table->enum('forma_pago', ['efectivo', 'tarjeta', 'transferencia', 'cheque'])->default('efectivo');
-            $table->decimal('monto', 10, 2);
-            $table->string('referencia', 100)->nullable();
+            $table->unsignedBigInteger('venta_id')->comment('ID de la venta');
+            $table->dateTime('fecha_cobro')->comment('Fecha y hora del cobro');
+            $table->enum('forma_pago', ['efectivo', 'tarjeta', 'transferencia', 'cheque'])->default('efectivo')->comment('Forma de pago utilizada');
+            $table->decimal('monto', 10, 2)->comment('Monto cobrado');
+            $table->string('referencia', 100)->nullable()->comment('Referencia del pago (núm. tarjeta, cheque, etc.)');
             $table->timestamps();
 
             $table->foreign('venta_id')->references('id')->on('ventas')->onDelete('cascade')->onUpdate('cascade');

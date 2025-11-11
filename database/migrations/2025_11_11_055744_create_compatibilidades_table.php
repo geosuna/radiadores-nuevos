@@ -13,19 +13,19 @@ return new class extends Migration
     {
         Schema::create('compatibilidades', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('articulo_id');
-            $table->unsignedBigInteger('auto_id');
-            $table->enum('tipo_compatibilidad', ['original', 'compatible', 'universal'])->default('compatible');
-            $table->string('observaciones', 200)->nullable();
-            $table->unsignedBigInteger('updated_by_user_id');
-            $table->boolean('estatus')->default(1);
+            $table->unsignedBigInteger('articulo_id')->comment('ID del artículo');
+            $table->unsignedBigInteger('auto_id')->comment('ID del auto compatible');
+            $table->enum('tipo_compatibilidad', ['original', 'compatible', 'universal'])->default('compatible')->comment('Tipo de compatibilidad');
+            $table->string('observaciones', 200)->nullable()->comment('Notas adicionales sobre la compatibilidad');
+            $table->unsignedBigInteger('modificado_usuario_id')->comment('Usuario que registró/modificó');
+            $table->boolean('estatus')->default(1)->comment('1=Activo, 0=Inactivo');
             $table->timestamps();
 
-            $table->unique(['articulo_id', 'auto_id'], 'articulo_auto_unique');
+            $table->unique(['articulo_id', 'auto_id'], 'compatibilidad_articulo_auto_unique');
 
             $table->foreign('articulo_id')->references('id')->on('articulos')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('auto_id')->references('id')->on('autos')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('updated_by_user_id')->references('id')->on('users')->onUpdate('cascade');
+            $table->foreign('modificado_usuario_id')->references('id')->on('users')->onDelete('restrict')->onUpdate('cascade');
         });
     }
 
