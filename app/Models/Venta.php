@@ -26,14 +26,25 @@ class Venta extends Model
     {
         return [
             'estatus' => 'boolean',
+            'fecha_venta' => 'datetime',
+            'subtotal' => 'decimal:2',
+            'descuento' => 'decimal:2',
+            'impuestos' => 'decimal:2',
+            'total' => 'decimal:2',
         ];
     }
 
+    /**
+     * Relación: Sucursal donde se realizó la venta
+     */
     public function sucursal()
     {
-        return $this->belongsToMany(Sucursal::class, 'sucursal_id');
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
 
+    /**
+     * Relación: Usuario vendedor
+     */
     public function vendedor()
     {
         return $this->belongsTo(User::class, 'user_id');

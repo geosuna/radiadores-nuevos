@@ -14,7 +14,7 @@ class Compatibilidad extends Model
         'auto_id',
         'tipo_compatibilidad',
         'observaciones',
-        'updated_by_user_id',
+        'modificado_usuario_id',
         'estatus'
     ];
 
@@ -25,18 +25,27 @@ class Compatibilidad extends Model
         ];
     }
 
+    /**
+     * Relación: Artículo
+     */
     public function articulo()
     {
         return $this->belongsTo(Articulo::class, 'articulo_id');
     }
 
+    /**
+     * Relación: Auto
+     */
     public function auto()
     {
         return $this->belongsTo(Auto::class, 'auto_id');
     }
 
+    /**
+     * Relación: Usuario que registró/modificó
+     */
     public function actualizador()
     {
-        return $this->belongsTo(User::class, 'updated_by_user_id');
+        return $this->belongsTo(User::class, 'modificado_usuario_id');
     }
 }

@@ -15,25 +15,36 @@ class Inventario extends Model
         'cantidad',
         'stock_minimo',
         'ubicacion',
-        'updated_by_user_id'
+        'usuario_modificacion_id'
     ];
 
-    // El inventario pertenece a una sucursal especifica. Un registro de inventario es unico por combinacion sucursal-articulo
+    /**
+     * Relación: Sucursal donde está el stock
+     */
     public function sucursal()
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
 
+    /**
+     * Relación: Artículo en inventario
+     */
     public function articulo()
     {
         return $this->belongsTo(Articulo::class, 'articulo_id');
     }
 
+    /**
+     * Relación: Usuario que modificó
+     */
     public function actualizador()
     {
-        return $this->belongsTo(User::class, 'updated_by_user_id');
+        return $this->belongsTo(User::class, 'usuario_modificacion_id');
     }
 
+    /**
+     * Relación: Movimientos de inventario
+     */
     public function movimientos()
     {
         return $this->hasMany(MovimientoInventario::class, 'articulo_id')

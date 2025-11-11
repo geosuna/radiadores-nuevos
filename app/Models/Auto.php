@@ -12,11 +12,11 @@ class Auto extends Model
     protected $fillable = [
         'marca',
         'modelo',
-        'anio',
+        'anios_rango',
         'motor',
         'descripcion',
-        'user_id',
-        'updated_by_user_id',
+        'creado_usuario_id',
+        'modificado_usuario_id',
         'estatus'
     ];
 
@@ -27,8 +27,35 @@ class Auto extends Model
         ];
     }
 
+    /**
+     * Relación: Usuario que creó el auto
+     */
+    public function creador()
+    {
+        return $this->belongsTo(User::class, 'creado_usuario_id');
+    }
+
+    /**
+     * Relación: Usuario que modificó el auto
+     */
+    public function modificador()
+    {
+        return $this->belongsTo(User::class, 'modificado_usuario_id');
+    }
+
+    /**
+     * Relación: Compatibilidades del auto
+     */
     public function compatibilidades()
     {
         return $this->hasMany(Compatibilidad::class, 'auto_id');
+    }
+
+    /**
+     * Relación: Artículos para los que este auto es principal
+     */
+    public function articulosPrincipales()
+    {
+        return $this->hasMany(Articulo::class, 'auto_principal_id');
     }
 }
