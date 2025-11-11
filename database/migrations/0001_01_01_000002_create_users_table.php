@@ -27,7 +27,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('sucursal_id')->references('id')->on('sucursal');
+            $table->foreign('sucursal_id')->references('id')->on('sucursales');
             $table->foreign('creado_usuario_id')->references('id')->on('users');
             $table->foreign('modificado_usuario_id')->references('id')->on('users');
         });
